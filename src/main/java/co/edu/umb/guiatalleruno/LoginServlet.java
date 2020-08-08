@@ -35,8 +35,8 @@ public class LoginServlet extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         try ( PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
-            String txtUserName=request.getParameter("txtUserName");
-            String txtPassword=request.getParameter("txtPassword");
+            String txtUserName = request.getParameter("txtUserName");
+            String txtPassword = request.getParameter("txtPassword");
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
@@ -44,7 +44,7 @@ public class LoginServlet extends HttpServlet {
             out.println("</head>");
             out.println("<body>");
             out.println("<h1>Hola usuario: "+txtUserName+"</h1>");
-            out.println("<h2>Has accedido con la contraseña: "+txtPassword+"</h2>");
+            out.println("<h2>Has accedido con la contraseÃ±a: "+txtPassword+"</h2>");
             out.println("</body>");
             out.println("</html>");
         }
