@@ -5,6 +5,11 @@
  */
 package co.edu.umb.guiatalleruno.negocio;
 
+import co.edu.umb.guiatalleruno.modelo.Usuario;
+import co.edu.umb.guiatalleruno.negocio.constantes.EMensajes;
+import co.edu.umb.guiatalleruno.negocio.excepciones.GuiaUnoException;
+import co.edu.umb.guiatalleruno.negocio.servicios.UsuarioServicio;
+
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
@@ -35,9 +40,26 @@ public class LoginServlet extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         try ( PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
-            String txtUserName = request.getParameter("txtUserName");
-            String txtPassword = request.getParameter("txtPassword");
-            out.println("<!DOCTYPE html>");
+
+            // Recibir los atributos del usuario desde la peticion
+            Usuario usuarioLogin = new Usuario(
+                    request.getParameter("txtUserName"),
+                    request.getParameter("txtPassword")
+            );
+
+            if (!new UsuarioServicio().validarLogin(usuarioLogin)){
+                // el flujo de datos cuando el login es invalido.
+                request.setAttribute("mensaje", EMensajes.NO_AUTENTICADO.getMensaje());
+                request.getRequestDispatcher("/error.jsp").forward(request,response);
+            }
+
+            // el flujo de datos cuando el login es correcto.
+
+            request.setAttribute("usuario", usuarioLogin);
+            request.setAttribute("mensaje", EMensajes.AUTENTICADO.getMensaje());
+            request.getRequestDispatcher("/home.jsp").forward(request,response);
+
+            /*out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
             out.println("<title>Servlet LoginServlet</title>");            
@@ -45,8 +67,16 @@ public class LoginServlet extends HttpServlet {
             out.println("<body>");
             out.println("<h1>Hola usuario: "+txtUserName+"</h1>");
             out.println("<h2>Has accedido con la contraseña: "+txtPassword+"</h2>");
+            out.println(EMensajes.ERROR_LOGIN.getMensaje());
             out.println("</body>");
-            out.println("</html>");
+            out.println("</html>");*/
+
+        } catch (GuiaUnoException e){
+            // el flujo de datos cuando el se genero un error.
+            request.setAttribute("mensaje", e.getDescripcion());
+            request.getRequestDispatcher("/error.jsp").forward(request,response);
+        } catch(Exception ex){
+            ex.printStackTrace();
         }
     }
 
